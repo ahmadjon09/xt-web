@@ -1,0 +1,6 @@
+@import 'tailwindcss';
+.container {
+  max-width: 299px;
+  background-color: #241b2a;
+  margin: auto;
+}
