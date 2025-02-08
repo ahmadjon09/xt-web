@@ -1,6 +1,9 @@
 @import 'tailwindcss';
 .container {
-  max-width: 299px;
+  max-width: 599px;
   background-color: #241b2a;
   margin: auto;
+  background-image: url(./assets/images/bg.jpg);
+  background-position: center;
+  background-size: cover;
 }
