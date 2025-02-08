@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import axios from 'axios'
 import { X } from 'lucide-react'
 
@@ -16,6 +16,7 @@ export const Home = () => {
     forGirls: '',
     forBoys: ''
   })
+
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(null)
 
@@ -49,23 +50,11 @@ export const Home = () => {
             : 'Bollar uchun'
           : 'Universal'
 
-      const caption = `🥶  *${formData.name.toUpperCase()} aksiyada!*
-
-💰  *Narxi:* ${formData.price} so‘m  😇
-
-📏  *O'lcham:* ${formData.size || 'Universal'}
-
-👕  *Kategoriya:* ${category}
-
-🚚  *Dastafka:* Bor✨
-
-✈️  *Yetib borish muddati:* 20 kun
-
-Shoshiling!  ✅
-
-📩  Murojaat uchun: '@ProgrammWeeb_'
-👤  Bot admin: '@ItsNoWonder_'
-`
+      const caption = `🥶  *${formData.name.toUpperCase()} aksiyada!*\n💰  *Narxi:* ${
+        formData.price
+      } so‘m\n📏  *O'lcham:* ${
+        formData.size || 'Universal'
+      }\n👕  *Kategoriya:* ${category}\n🚚  *Dastafka:* Bor✨\n✈️  *Yetib borish muddati:* 20 kun\n\n✅  📩  Murojaat uchun: '@ProgrammWeeb_'\n👤  Bot admin: '@ItsNoWonder_'`
 
       if (!formData.forGirls && !formData.forBoys) {
         await axios.post(
@@ -124,6 +113,7 @@ Shoshiling!  ✅
         forGirls: '',
         forBoys: ''
       })
+
       setSuccess('Post yuborildi!')
     } catch (error) {
       setSuccess('Xatolik yuz berdi!')
@@ -131,7 +121,28 @@ Shoshiling!  ✅
 
     setLoading(false)
   }
+
+  const handleStartCommand = async userId => {
+    try {
+      const message = `👋 Assalomu alaykum!\n\n🌐 <a href="https://xt-web-ivory.vercel.app/">Bizning sayt</a>\n\n👤 Bot Admini: <a href="https://t.me/ItsNoWonder">Admin bilan bog‘lanish</a>`
+
+      await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
+        chat_id: userId,
+        text: message,
+        parse_mode: 'HTML',
+        disable_web_page_preview: false
+      })
+    } catch (error) {
+      console.error('Xatolik yuz berdi:', error)
+    }
+  }
+
+  useEffect(() => {
+    handleStartCommand()
+  }, [])
+
   const user = localStorage.getItem('user')
+
   return (
     <div className='flex items-start justify-center container min-h-[90vh] bg-[#241b2a] text-white'>
       <div className='max-w-xs w-full px-6 text-center'>
@@ -187,22 +198,6 @@ Shoshiling!  ✅
             name='size'
             placeholder='O‘lcham'
             value={formData.size}
-            onChange={handleChange}
-            className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
-          />
-          <input
-            type='text'
-            name='forGirls'
-            placeholder='Qizlar uchun (ha yoki yo‘q)'
-            value={formData.forGirls}
-            onChange={handleChange}
-            className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
-          />
-          <input
-            type='text'
-            name='forBoys'
-            placeholder='Bollar uchun (ha yoki yo‘q)'
-            value={formData.forBoys}
             onChange={handleChange}
             className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
           />
