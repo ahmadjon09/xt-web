@@ -77,7 +77,7 @@ export const Home = () => {
   return (
     <div className='flex items-start justify-center container min-h-[90vh] bg-[#241b2a] text-white'>
       <div className='max-w-xs w-full px-6 text-center'>
-        <h2 className='text-lg font-bold mb-4'>Botga Post Yuborish 2</h2>
+        <h2 className='text-lg font-bold mb-4'>Botga Post Yuborish 3</h2>
         <form onSubmit={handleSubmit} className='flex flex-col gap-3'>
           <input type='file' name='images' onChange={handleFileChange} multiple className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none' />
           <div className='flex flex-wrap justify-center gap-2 mt-2'>
@@ -99,15 +99,18 @@ export const Home = () => {
           </div>
           <input type='text' name='name' placeholder='Mahsulot nomi' value={formData.name} onChange={handleChange} className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none' required />
           <input type='number' name='price' placeholder='Narx' value={formData.price} onChange={handleChange} className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none' required />
-          <select name='sizeSelect' value={formData.sizeSelect} onChange={handleChange} className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'>
-            <option value=''>O‘lcham tanlang</option>
-            <option value='S'>S</option>
-            <option value='M'>M</option>
-            <option value='L'>L</option>
-            <option value='XL'>XL</option>
-            <option value='2XL'>2XL</option>
-            <option value='3XL'>3XL</option>
-          </select>
+          <div className='flex w-auto justify-between max-w-[272px] gap-2'>
+            <select name='sizeSelect' value={formData.sizeSelect} onChange={handleChange} className='p-2 w-1/2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'>
+              <option value=''>O‘lcham tanlang</option>
+              <option value='S'>S</option>
+              <option value='M'>M</option>
+              <option value='L'>L</option>
+              <option value='XL'>XL</option>
+              <option value='2XL'>2XL</option>
+              <option value='3XL'>3XL</option>
+            </select>
+            <input type='text' name='size' placeholder='O‘lcham' value={formData.size} onChange={handleChange} className='p-2 w-1/2 bg-[#241b2a] text-white border-2 border-white focus:outline-none' />
+          </div>
           <select name='gender' value={formData.gender} onChange={handleChange} className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'>
             <option value=''>Kim uchun?</option>
             <option value='Qizlar uchun'>Qizlar uchun</option>
