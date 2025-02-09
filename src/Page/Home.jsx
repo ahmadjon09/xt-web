@@ -43,7 +43,7 @@ export const Home = () => {
     setSuccess(null);
 
     try {
-      const caption = `🥶 *${formData.name.toUpperCase()} uchun aksiya!*\n\n💰 *Narxi:* ${formData.price} so‘m 😇\n\n📏 *O'lcham:* ${selectedSize}\n\n👕 *Kategoriya:* ${formData.category}\n\n🧑‍🦰 *Kim uchun:* ${formData.gender}\n\n🚚 *Dastafka:* Bor✨\n\n✈️ *Yetib borish muddati:* 20 kun\n\n*Shoshiling! ✅*\n\n📩 Murojaat uchun: '@ProgrammWeeb_'\n👤 Bosh admin: '@ItsNoWonder_'`;
+      const caption = "🥶 *${formData.name.toUpperCase()} uchun aksiya!*\n\n💰 *Narxi:* ${formData.price} so‘m 😇\n\n📏 *O'lcham:* ${selectedSize}\n\n👕 *Kategoriya:* ${formData.category}\n\n🧑‍🦰 *Kim uchun:* ${formData.gender}\n\n🚚 *Dastafka:* Bor✨\n\n✈️ *Yetib borish muddati:* 20 kun\n\n*Shoshiling! ✅*\n\n📩 Murojaat uchun: '@ProgrammWeeb_'\n👤 Bosh admin: '@ItsNoWonder_'";
 
       const mediaGroup = await Promise.all(
         formData.images.map(async image => {
