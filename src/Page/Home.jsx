@@ -1,11 +1,9 @@
-import React, { useState } from 'react'
-import axios from 'axios'
-import { X } from 'lucide-react'
+import React, { useState } from 'react';
+import axios from 'axios';
+import { X } from 'lucide-react';
 
-const BOT_TOKEN = '7727607417:AAGRkbmn4QcTg4HhadIDoJp0Z9LHw0Y9UmM'
-const CHAT_ID = '-1002447257466'
-const UNIVERSAL_STICKER =
-  'CAACAgIAAxkBAAEJvq1lFhPT8XQpJf8h8ZvOKWl2jwABDW0AAmA5AAI_qDBJvH0TcaHbGmY0BA'
+const BOT_TOKEN = '7727607417:AAGRkbmn4QcTg4HhadIDoJp0Z9LHw0Y9UmM';
+const CHAT_ID = '-1002447257466';
 
 export const Home = () => {
   const [formData, setFormData] = useState({
@@ -13,181 +11,108 @@ export const Home = () => {
     name: '',
     price: '',
     size: '',
-    forGirls: '',
-    forBoys: ''
-  })
-  const [loading, setLoading] = useState(false)
-  const [success, setSuccess] = useState(null)
+    sizeSelect: '',
+    category: ''
+  });
+  const [loading, setLoading] = useState(false);
+  const [success, setSuccess] = useState(null);
 
   const handleChange = e => {
-    setFormData({ ...formData, [e.target.name]: e.target.value })
-  }
-  const selectedSize = formData.sizeSelect || formData.size || "Hamma o'lcham mavjud"
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
 
   const handleFileChange = e => {
     setFormData(prevState => ({
       ...prevState,
       images: [...prevState.images, ...e.target.files]
-    }))
-  }
+    }));
+  };
 
   const handleRemoveImage = index => {
-    const updatedImages = [...formData.images]
-    updatedImages.splice(index, 1)
-    setFormData({ ...formData, images: updatedImages })
-  }
+    const updatedImages = [...formData.images];
+    updatedImages.splice(index, 1);
+    setFormData({ ...formData, images: updatedImages });
+  };
+
+  const selectedSize = formData.sizeSelect || formData.size;
 
   const handleSubmit = async e => {
-    e.preventDefault()
-    setLoading(true)
-    setSuccess(null)
+    e.preventDefault();
+    setLoading(true);
+    setSuccess(null);
 
     try {
-      const category =
-        formData.forGirls || formData.forBoys
-          ? formData.forGirls
-            ? 'Qizlar uchun'
-            : 'Bollar uchun'
-          : 'Universal'
+      const caption = `🥶 *${formData.name.toUpperCase()} uchun aksiya!*
 
-      const caption = 🥶 *${formData.name.toUpperCase()} uchun aksiya!*
+💰 *Narxi:* ${formData.price} so‘m 😇
 
-          💰 *Narxi:* ${formData.price} so‘m 😇
-          
-          📏 *O'lcham:* ${selectedSize}
-          
-          👕 *Kategoriya:* ${category}
-          
-          🚚 *Dastafka:* Bor✨
-          
-          ✈️ *Yetib borish muddati:* 20 kun
-          
-          *Shoshiling! ✅*
-          
-          📩 Murojaat uchun: '@ProgrammWeeb_'
-          👤 Bosh admin: '@ItsNoWonder_'
+📏 *O'lcham:* ${selectedSize}
 
-      if (!formData.forGirls && !formData.forBoys) {
-        await axios.post(
-          https://api.telegram.org/bot${BOT_TOKEN}/sendSticker,
-          {
-            chat_id: CHAT_ID,
-            sticker: UNIVERSAL_STICKER
-          }
-        )
-      }
+👕 *Kategoriya:* ${formData.category}
 
-      if (formData.images.length > 0) {
-        const mediaGroup = await Promise.all(
-          formData.images.map(async (image, index) => {
-            const formDataImage = new FormData()
-            formDataImage.append('chat_id', CHAT_ID)
-            formDataImage.append('photo', image)
+🚚 *Dastafka:* Bor✨
 
-            const { data } = await axios.post(
-              https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto,
-              formDataImage,
-              { headers: { 'Content-Type': 'multipart/form-data' } }
-            )
+✈️ *Yetib borish muddati:* 20 kun
 
-            return {
-              type: 'photo',
-              media: data.result.photo[0].file_id,
-              ...(index === 0 && { caption, parse_mode: 'Markdown' })
-            }
-          })
-        )
+*Shoshiling! ✅*
 
-        await axios.post(
-          https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup,
-          {
-            chat_id: CHAT_ID,
-            media: mediaGroup
-          }
-        )
-      } else {
-        await axios.post(
-          https://api.telegram.org/bot${BOT_TOKEN}/sendMessage,
-          {
-            chat_id: CHAT_ID,
-            text: caption,
+📩 Murojaat uchun: '@ProgrammWeeb_'
+👤 Bosh admin: '@ItsNoWonder_'`;
+
+      const mediaGroup = await Promise.all(
+        formData.images.map(async (image, index) => {
+          const formDataImage = new FormData();
+          formDataImage.append('chat_id', CHAT_ID);
+          formDataImage.append('photo', image);
+
+          const { data } = await axios.post(
+            `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`,
+            formDataImage,
+            { headers: { 'Content-Type': 'multipart/form-data' } }
+          );
+
+          return {
+            type: 'photo',
+            media: data.result.photo[0].file_id,
+            caption: index === 0 ? caption : '',
             parse_mode: 'Markdown'
-          }
-        )
-      }
+          };
+        })
+      );
 
-      setFormData({
-        images: [],
-        name: '',
-        price: '',
-        size: '',
-         forGirls: '',
-         forBoys: ''
-       })
-      setSuccess('Post yuborildi!')
+      await axios.post(
+        `https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup`,
+        {
+          chat_id: CHAT_ID,
+          media: mediaGroup
+        }
+      );
+
+      setFormData({ images: [], name: '', price: '', size: '', sizeSelect: '', category: '' });
+      setSuccess('Post yuborildi!');
     } catch (error) {
-      setSuccess('Xatolik yuz berdi!')
+      setSuccess('Xatolik yuz berdi!');
     }
 
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   return (
     <div className='flex items-start justify-center container min-h-[90vh] bg-[#241b2a] text-white'>
       <div className='max-w-xs w-full px-6 text-center'>
         <h2 className='text-lg font-bold mb-4'>Botga Post Yuborish</h2>
         <form onSubmit={handleSubmit} className='flex flex-col gap-3'>
-          <input
-            type='file'
-            name='images'
-            onChange={handleFileChange}
-            multiple
-            className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
-          />
-          <div className='flex flex-wrap justify-center gap-2 mt-2'>
-            {formData.images.map((image, index) => (
-              <div
-                key={index}
-                className='relative rounded-lg w-20 h-20 bg-cover bg-center'
-                style={{
-                  backgroundImage: url(${URL.createObjectURL(image)})
-                }}
-              >
-                <button
-                  type='button'
-                  onClick={() => handleRemoveImage(index)}
-                  className='absolute cursor-pointer top-0 right-0 text-red-500 hover:text-black rounded-full w-5 h-5 flex items-center justify-center'
-                >
-                  <X />
-                </button>
-              </div>
-            ))}
-          </div>
-          <input
-            type='text'
-            name='name'
-            placeholder='Mahsulot nomi'
-            value={formData.name}
-            onChange={handleChange}
-            className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
-            required
-          />
-          <input
-            type='number'
-            name='price'
-            placeholder='Narx'
-            value={formData.price}
-            onChange={handleChange}
-            className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
-            required
-          />
+          <input type='file' name='images' onChange={handleFileChange} multiple className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none' />
+          <select name='category' value={formData.category} onChange={handleChange} className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'>
+            <option value=''>Kategoriya tanlang</option>
+            <option value='Qizlar uchun'>Qizlar uchun</option>
+            <option value='Bollar uchun'>Bollar uchun</option>
+            <option value='Universal'>Universal</option>
+          </select>
+          <input type='text' name='name' placeholder='Mahsulot nomi' value={formData.name} onChange={handleChange} className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none' required />
+          <input type='number' name='price' placeholder='Narx' value={formData.price} onChange={handleChange} className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none' required />
           <div className='flex w-auto justify-between max-w-[272px] gap-2'>
-            <select
-              name='sizeSelect'
-              value={formData.sizeSelect}
-              onChange={handleChange}
-              className='p-2 w-1/2  bg-[#241b2a] text-white border-2 border-white focus:outline-none'
-            >
+            <select name='sizeSelect' value={formData.sizeSelect} onChange={handleChange} className='p-2 w-1/2  bg-[#241b2a] text-white border-2 border-white focus:outline-none'>
               <option value=''>O‘lcham tanlang</option>
               <option value='S'>S</option>
               <option value='M'>M</option>
@@ -196,42 +121,14 @@ export const Home = () => {
               <option value='2XL'>2XL</option>
               <option value='3XL'>3XL</option>
             </select>
-            <input
-              type='number'
-              name='size'
-              placeholder='Oyoq kiyim razmeri'
-              value={formData.size}
-              onChange={handleChange}
-              className='p-2 w-1/2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
-            />
+            <input type='number' name='size' placeholder='Oyoq kiyim razmeri' value={formData.size} onChange={handleChange} className='p-2 w-1/2 bg-[#241b2a] text-white border-2 border-white focus:outline-none' />
           </div>
-
-          <input
-            type='text'
-            name='forGirls'
-            placeholder='Qizlar uchun (ha yoki yo‘q)'
-            value={formData.forGirls}
-            onChange={handleChange}
-            className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
-          />
-          <input
-            type='text'
-            name='forBoys'
-            placeholder='Bollar uchun (ha yoki yo‘q)'
-            value={formData.forBoys}
-            onChange={handleChange}
-            className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
-          />
-          <button
-            type='submit'
-            className='p-2 border-2 border-white bg-[#241b2a] hover:bg-white hover:text-[#241b2a] transition-all duration-300'
-            disabled={loading}
-          >
+          <button type='submit' className='p-2 border-2 border-white bg-[#241b2a] hover:bg-white hover:text-[#241b2a] transition-all duration-300' disabled={loading}>
             {loading ? 'Yuborilmoqda...' : 'Yuborish'}
           </button>
         </form>
         {success && <p className='mt-4'>{success}</p>}
       </div>
     </div>
-  )
-}
+  );
+};
