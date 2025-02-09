@@ -30,9 +30,10 @@ export const Home = () => {
   };
 
   const handleRemoveImage = index => {
-    const updatedImages = [...formData.images];
-    updatedImages.splice(index, 1);
-    setFormData({ ...formData, images: updatedImages });
+    setFormData(prevState => ({
+      ...prevState,
+      images: prevState.images.filter((_, i) => i !== index)
+    }));
   };
 
   const selectedSize = formData.sizeSelect || formData.size;
@@ -43,35 +44,24 @@ export const Home = () => {
     setSuccess(null);
 
     try {
-      const caption = `🥶 *${formData.name.toUpperCase()} uchun aksiya!*\n\n💰 *Narxi:* ${formData.price} so‘m 😇\n\n📏 *O'lcham:* ${selectedSize}\n\n👕 *Kategoriya:* ${formData.category}\n\n🧑‍🦰 *Kim uchun:* ${formData.gender}\n\n🚚 *Dastafka:* Bor✨\n\n✈️ *Yetib borish muddati:* 20 kun\n\n*Shoshiling! ✅*\n\n📩 Murojaat uchun: '@ProgrammWeeb_'\n👤 Bosh admin: '@ItsNoWonder_'`;
+      const caption = `🥶 *${formData.name.toUpperCase()} uchun aksiya!*\n\n💰 *Narxi:* ${formData.price} so‘m 😇\n\n📏 *O'lcham:* ${selectedSize}\n\n👕 *Kategoriya:* ${formData.category}\n\n🧑‍🦰 *Kim uchun:* ${formData.gender}\n\n🚚 *Dastafka:* Bor✨\n\n✈️ *Yetib borish muddati:* 20 kun\n\n*Shoshiling! ✅*\n\n📩 Murojaat uchun: \n'@ProgrammWeeb_'\n👤 Bosh admin: \n'@ItsNoWonder_'`;
 
-      const mediaGroup = await Promise.all(
-        formData.images.map(async image => {
-          const formDataImage = new FormData();
-          formDataImage.append('chat_id', CHAT_ID);
-          formDataImage.append('photo', image);
+      const mediaGroup = formData.images.map((_, index) => ({
+        type: 'photo',
+        media: `attach://photo${index}`
+      }));
 
-          const { data } = await axios.post(
-            `https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto`,
-            formDataImage,
-            { headers: { 'Content-Type': 'multipart/form-data' } }
-          );
-
-          return {
-            type: 'photo',
-            media: data.result.photo[0].file_id,
-            caption,
-            parse_mode: 'Markdown'
-          };
-        })
-      );
+      const formDataImage = new FormData();
+      formData.images.forEach((image, index) => {
+        formDataImage.append(`photo${index}`, image);
+      });
+      formDataImage.append('chat_id', CHAT_ID);
+      formDataImage.append('media', JSON.stringify(mediaGroup));
 
       await axios.post(
         `https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup`,
-        {
-          chat_id: CHAT_ID,
-          media: mediaGroup
-        }
+        formDataImage,
+        { headers: { 'Content-Type': 'multipart/form-data' } }
       );
 
       setFormData({ images: [], name: '', price: '', size: '', sizeSelect: '', category: '', gender: '' });
@@ -108,18 +98,15 @@ export const Home = () => {
           </div>
           <input type='text' name='name' placeholder='Mahsulot nomi' value={formData.name} onChange={handleChange} className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none' required />
           <input type='number' name='price' placeholder='Narx' value={formData.price} onChange={handleChange} className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none' required />
-          <div className='flex w-auto justify-between max-w-[272px] gap-2'>
-            <select name='sizeSelect' value={formData.sizeSelect} onChange={handleChange} className='p-2 w-1/2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'>
-              <option value=''>O‘lcham tanlang</option>
-              <option value='S'>S</option>
-              <option value='M'>M</option>
-              <option value='L'>L</option>
-              <option value='XL'>XL</option>
-              <option value='2XL'>2XL</option>
-              <option value='3XL'>3XL</option>
-            </select>
-            <input type='number' name='size' placeholder='Oyoq kiyim razmeri' value={formData.size} onChange={handleChange} className='p-2 w-1/2 bg-[#241b2a] text-white border-2 border-white focus:outline-none' />
-          </div>
+          <select name='sizeSelect' value={formData.sizeSelect} onChange={handleChange} className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'>
+            <option value=''>O‘lcham tanlang</option>
+            <option value='S'>S</option>
+            <option value='M'>M</option>
+            <option value='L'>L</option>
+            <option value='XL'>XL</option>
+            <option value='2XL'>2XL</option>
+            <option value='3XL'>3XL</option>
+          </select>
           <select name='gender' value={formData.gender} onChange={handleChange} className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'>
             <option value=''>Kim uchun?</option>
             <option value='Qizlar uchun'>Qizlar uchun</option>
