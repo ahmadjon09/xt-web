@@ -13,7 +13,6 @@ export const Home = () => {
     size: '',
     sizeSelect: '',
     category: '',
-    gender: ''
   });
   const [loading, setLoading] = useState(false);
   const [success, setSuccess] = useState(null);
@@ -51,9 +50,7 @@ export const Home = () => {
 
 📏 *O'lcham:* ${selectedSize}
 
-👕 *Kategoriya:* ${formData.category}
-
-🧑‍🦰 *Kim uchun:* ${selectedGender}
+👕 *Kategoriya:* ${selectedGender}
 
 🚚 *Dastafka:* Bor✨
 
@@ -83,7 +80,7 @@ export const Home = () => {
         { headers: { 'Content-Type': 'multipart/form-data' } }
       );
 
-      setFormData({ images: [], name: '', price: '', size: '', sizeSelect: '', category: '', gender: '' });
+      setFormData({ images: [], name: '', price: '', size: '', sizeSelect: '', category: '' });
       setSuccess('Post yuborildi!');
     } catch (error) {
       setSuccess('Xatolik yuz berdi!');
@@ -129,7 +126,7 @@ export const Home = () => {
             </select>
             <input type='text' name='size' placeholder='O‘lcham' value={formData.size} onChange={handleChange} className='p-2 w-1/2 bg-[#241b2a] text-white border-2 border-white focus:outline-none' />
           </div>
-          <select name='gender' value={formData.gender} onChange={handleChange} className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'>
+          <select name='category' value={formData.category} onChange={handleChange} className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'>
             <option value=''>Kim uchun?</option>
             <option value='Qizlar uchun'>Qizlar uchun</option>
             <option value='Bollar uchun'>Bollar uchun</option>
