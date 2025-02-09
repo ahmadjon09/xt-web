@@ -3,7 +3,7 @@ import axios from 'axios'
 import { X } from 'lucide-react'
 
 const BOT_TOKEN = '7727607417:AAGRkbmn4QcTg4HhadIDoJp0Z9LHw0Y9UmM'
-const CHAT_ID = '-1002401476305'
+const CHAT_ID = '-1002447257466'
 const UNIVERSAL_STICKER =
   'CAACAgIAAxkBAAEJvq1lFhPT8XQpJf8h8ZvOKWl2jwABDW0AAmA5AAI_qDBJvH0TcaHbGmY0BA'
 
@@ -116,14 +116,14 @@ export const Home = () => {
         )
       }
 
-      // setFormData({
-      //   images: [],
-      //   name: '',
-      //   price: '',
-      //   size: '',
-      //   forGirls: '',
-      //   forBoys: ''
-      // })
+      setFormData({
+        images: [],
+        name: '',
+        price: '',
+        size: '',
+         forGirls: '',
+         forBoys: ''
+       })
       setSuccess('Post yuborildi!')
     } catch (error) {
       setSuccess('Xatolik yuz berdi!')
