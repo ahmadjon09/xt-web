@@ -36,7 +36,8 @@ export const Home = () => {
     }));
   };
 
-  const selectedSize = formData.sizeSelect || formData.size;
+  const selectedSize = formData.sizeSelect || formData.size || 'Hamma o‘lcham mavjud';
+  const selectedGender = formData.gender || 'Universal';
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -44,7 +45,24 @@ export const Home = () => {
     setSuccess(null);
 
     try {
-      const caption = `🥶 *${formData.name.toUpperCase()} uchun aksiya!*\n\n💰 *Narxi:* ${formData.price} so‘m 😇\n\n📏 *O'lcham:* ${selectedSize}\n\n👕 *Kategoriya:* ${formData.category}\n\n🧑‍🦰 *Kim uchun:* ${formData.gender}\n\n🚚 *Dastafka:* Bor✨\n\n✈️ *Yetib borish muddati:* 20 kun\n\n*Shoshiling! ✅*\n\n📩 Murojaat uchun: '@ProgrammWeeb_'\n👤 Bosh admin: '@ItsNoWonder_'`;
+      const caption = `🥶 *${formData.name.toUpperCase()} uchun aksiya!*
+
+💰 *Narxi:* ${formData.price} so‘m 😇
+
+📏 *O'lcham:* ${selectedSize}
+
+👕 *Kategoriya:* ${formData.category}
+
+🧑‍🦰 *Kim uchun:* ${selectedGender}
+
+🚚 *Dastafka:* Bor✨
+
+✈️ *Yetib borish muddati:* 20 kun
+
+*Shoshiling! ✅*
+
+📩 Murojaat uchun: '@ProgrammWeeb_'
+👤 Bosh admin: '@ItsNoWonder_'`;
 
       const mediaGroup = formData.images.map((_, index) => ({
         type: 'photo',
@@ -77,7 +95,7 @@ export const Home = () => {
   return (
     <div className='flex items-start justify-center container min-h-[90vh] bg-[#241b2a] text-white'>
       <div className='max-w-xs w-full px-6 text-center'>
-        <h2 className='text-lg font-bold mb-4'>Botga Post Yuborish 3</h2>
+        <h2 className='text-lg font-bold mb-4'>Botga Post Yuborish</h2>
         <form onSubmit={handleSubmit} className='flex flex-col gap-3'>
           <input type='file' name='images' onChange={handleFileChange} multiple className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none' />
           <div className='flex flex-wrap justify-center gap-2 mt-2'>
