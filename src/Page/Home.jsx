@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios'
 import { X } from 'lucide-react'
 
 const BOT_TOKEN = '7727607417:AAGRkbmn4QcTg4HhadIDoJp0Z9LHw0Y9UmM'
-const CHAT_ID = '-1002447257466'
+const CHAT_ID = '-1002401476305'
 const UNIVERSAL_STICKER =
   'CAACAgIAAxkBAAEJvq1lFhPT8XQpJf8h8ZvOKWl2jwABDW0AAmA5AAI_qDBJvH0TcaHbGmY0BA'
 
@@ -16,13 +16,13 @@ export const Home = () => {
     forGirls: '',
     forBoys: ''
   })
-
   const [loading, setLoading] = useState(false)
   const [success, setSuccess] = useState(null)
 
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
+  const selectedSize = formData.sizeSelect || formData.size || 'Universal'
 
   const handleFileChange = e => {
     setFormData(prevState => ({
@@ -50,11 +50,22 @@ export const Home = () => {
             : 'Bollar uchun'
           : 'Universal'
 
-      const caption = `🥶  *${formData.name.toUpperCase()} aksiyada!*\n💰  *Narxi:* ${
-        formData.price
-      } so‘m\n📏  *O'lcham:* ${
-        formData.size || 'Universal'
-      }\n👕  *Kategoriya:* ${category}\n🚚  *Dastafka:* Bor✨\n✈️  *Yetib borish muddati:* 20 kun\n\n✅  📩  Murojaat uchun: '@ProgrammWeeb_'\n👤  Bot admin: '@ItsNoWonder_'`
+      const caption = `🥶 *${formData.name.toUpperCase()} uchun aksiya!*
+
+          💰 *Narxi:* ${formData.price} so‘m 😇
+          
+          📏 *O'lcham:* ${selectedSize}
+          
+          👕 *Kategoriya:* ${category}
+          
+          🚚 *Dastafka:* Bor✨
+          
+          ✈️ *Yetib borish muddati:* 20 kun
+          
+          *Shoshiling! ✅*
+          
+          📩 Murojaat uchun: '@ProgrammWeeb_'
+          👤 Bosh admin: '@ItsNoWonder_'`
 
       if (!formData.forGirls && !formData.forBoys) {
         await axios.post(
@@ -105,15 +116,14 @@ export const Home = () => {
         )
       }
 
-      setFormData({
-        images: [],
-        name: '',
-        price: '',
-        size: '',
-        forGirls: '',
-        forBoys: ''
-      })
-
+      // setFormData({
+      //   images: [],
+      //   name: '',
+      //   price: '',
+      //   size: '',
+      //   forGirls: '',
+      //   forBoys: ''
+      // })
       setSuccess('Post yuborildi!')
     } catch (error) {
       setSuccess('Xatolik yuz berdi!')
@@ -122,41 +132,19 @@ export const Home = () => {
     setLoading(false)
   }
 
-  const handleStartCommand = async userId => {
-    try {
-      const message = `👋 Assalomu alaykum!\n\n🌐 <a href="https://xt-web-ivory.vercel.app/">Bizning sayt</a>\n\n👤 Bot Admini: <a href="https://t.me/ItsNoWonder">Admin bilan bog‘lanish</a>`
-
-      await axios.post(`https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`, {
-        chat_id: userId,
-        text: message,
-        parse_mode: 'HTML',
-        disable_web_page_preview: false
-      })
-    } catch (error) {
-      console.error('Xatolik yuz berdi:', error)
-    }
-  }
-
-  useEffect(() => {
-    handleStartCommand()
-  }, [])
-
-  const user = localStorage.getItem('user')
-
   return (
     <div className='flex items-start justify-center container min-h-[90vh] bg-[#241b2a] text-white'>
       <div className='max-w-xs w-full px-6 text-center'>
-        <h2 className='text-lg font-bold mb-4'>Welcome {user}</h2>
+        <h2 className='text-lg font-bold mb-4'>Botga Post Yuborish</h2>
         <form onSubmit={handleSubmit} className='flex flex-col gap-3'>
           <input
             type='file'
             name='images'
             onChange={handleFileChange}
             multiple
-            required
             className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
           />
-          <div className='flex flex-wrap gap-2 mt-2'>
+          <div className='flex flex-wrap justify-center gap-2 mt-2'>
             {formData.images.map((image, index) => (
               <div
                 key={index}
@@ -193,11 +181,44 @@ export const Home = () => {
             className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
             required
           />
+          <div className='flex w-auto justify-between max-w-[272px] gap-2'>
+            <select
+              name='sizeSelect'
+              value={formData.sizeSelect}
+              onChange={handleChange}
+              className='p-2 w-1/2  bg-[#241b2a] text-white border-2 border-white focus:outline-none'
+            >
+              <option value=''>O‘lcham tanlang</option>
+              <option value='S'>S</option>
+              <option value='M'>M</option>
+              <option value='L'>L</option>
+              <option value='XL'>XL</option>
+              <option value='2XL'>2XL</option>
+              <option value='3XL'>3XL</option>
+            </select>
+            <input
+              type='number'
+              name='size'
+              placeholder='Oyoq kiyim razmeri'
+              value={formData.size}
+              onChange={handleChange}
+              className='p-2 w-1/2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
+            />
+          </div>
+
           <input
             type='text'
-            name='size'
-            placeholder='O‘lcham'
-            value={formData.size}
+            name='forGirls'
+            placeholder='Qizlar uchun (ha yoki yo‘q)'
+            value={formData.forGirls}
+            onChange={handleChange}
+            className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
+          />
+          <input
+            type='text'
+            name='forBoys'
+            placeholder='Bollar uchun (ha yoki yo‘q)'
+            value={formData.forBoys}
             onChange={handleChange}
             className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
           />
