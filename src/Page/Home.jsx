@@ -22,7 +22,7 @@ export const Home = () => {
   const handleChange = e => {
     setFormData({ ...formData, [e.target.name]: e.target.value })
   }
-  const selectedSize = formData.sizeSelect || formData.size || 'Universal'
+  const selectedSize = formData.sizeSelect || formData.size || "Hamma o'lcham mavjud"
 
   const handleFileChange = e => {
     setFormData(prevState => ({
@@ -50,26 +50,26 @@ export const Home = () => {
             : 'Bollar uchun'
           : 'Universal'
 
-      const caption = `🥶 *${formData.name.toUpperCase()} uchun aksiya!*
-      
-💰 *Narxi:* ${formData.price} so‘m 😇
-      
-📏 *O'lcham:* ${selectedSize}
-      
-👕 *Kategoriya:* ${category}
-      
-🚚 *Dastafka:* Bor✨
-      
-✈️ *Yetib borish muddati:* 20 kun
-      
-*Shoshiling! ✅*
-      
-📩 Murojaat uchun: '@ProgrammWeeb_'
-👤 Bosh admin: '@ItsNoWonder_'`
+      const caption = 🥶 *${formData.name.toUpperCase()} uchun aksiya!*
+
+          💰 *Narxi:* ${formData.price} so‘m 😇
+          
+          📏 *O'lcham:* ${selectedSize}
+          
+          👕 *Kategoriya:* ${category}
+          
+          🚚 *Dastafka:* Bor✨
+          
+          ✈️ *Yetib borish muddati:* 20 kun
+          
+          *Shoshiling! ✅*
+          
+          📩 Murojaat uchun: '@ProgrammWeeb_'
+          👤 Bosh admin: '@ItsNoWonder_'
 
       if (!formData.forGirls && !formData.forBoys) {
         await axios.post(
-          `https://api.telegram.org/bot${BOT_TOKEN}/sendSticker`,
+          https://api.telegram.org/bot${BOT_TOKEN}/sendSticker,
           {
             chat_id: CHAT_ID,
             sticker: UNIVERSAL_STICKER
@@ -78,25 +78,41 @@ export const Home = () => {
       }
 
       if (formData.images.length > 0) {
-        const mediaGroup = formData.images.map((image, index) => {
-          return {
-            type: 'photo',
-            media: `attach://file${index}`,
-            ...(index === 0 && { caption, parse_mode: 'Markdown' })
-          }
-        })
+        const mediaGroup = await Promise.all(
+          formData.images.map(async (image, index) => {
+            const formDataImage = new FormData()
+            formDataImage.append('chat_id', CHAT_ID)
+            formDataImage.append('photo', image)
 
-        const formDataMedia = new FormData()
-        formDataMedia.append('chat_id', CHAT_ID)
-        formDataMedia.append('media', JSON.stringify(mediaGroup))
-        formData.images.forEach((image, index) => {
-          formDataMedia.append(`file${index}`, image)
-        })
+            const { data } = await axios.post(
+              https://api.telegram.org/bot${BOT_TOKEN}/sendPhoto,
+              formDataImage,
+              { headers: { 'Content-Type': 'multipart/form-data' } }
+            )
+
+            return {
+              type: 'photo',
+              media: data.result.photo[0].file_id,
+              ...(index === 0 && { caption, parse_mode: 'Markdown' })
+            }
+          })
+        )
 
         await axios.post(
-          `https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup`,
-          formDataMedia,
-          { headers: { 'Content-Type': 'multipart/form-data' } }
+          https://api.telegram.org/bot${BOT_TOKEN}/sendMediaGroup,
+          {
+            chat_id: CHAT_ID,
+            media: mediaGroup
+          }
+        )
+      } else {
+        await axios.post(
+          https://api.telegram.org/bot${BOT_TOKEN}/sendMessage,
+          {
+            chat_id: CHAT_ID,
+            text: caption,
+            parse_mode: 'Markdown'
+          }
         )
       }
 
@@ -105,9 +121,9 @@ export const Home = () => {
         name: '',
         price: '',
         size: '',
-        forGirls: '',
-        forBoys: ''
-      })
+         forGirls: '',
+         forBoys: ''
+       })
       setSuccess('Post yuborildi!')
     } catch (error) {
       setSuccess('Xatolik yuz berdi!')
@@ -134,7 +150,7 @@ export const Home = () => {
                 key={index}
                 className='relative rounded-lg w-20 h-20 bg-cover bg-center'
                 style={{
-                  backgroundImage: `url(${URL.createObjectURL(image)})`
+                  backgroundImage: url(${URL.createObjectURL(image)})
                 }}
               >
                 <button
@@ -147,7 +163,70 @@ export const Home = () => {
               </div>
             ))}
           </div>
-          <button type='submit' className='p-2 border-2 border-white bg-[#241b2a] hover:bg-white hover:text-[#241b2a] transition-all duration-300' disabled={loading}>
+          <input
+            type='text'
+            name='name'
+            placeholder='Mahsulot nomi'
+            value={formData.name}
+            onChange={handleChange}
+            className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
+            required
+          />
+          <input
+            type='number'
+            name='price'
+            placeholder='Narx'
+            value={formData.price}
+            onChange={handleChange}
+            className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
+            required
+          />
+          <div className='flex w-auto justify-between max-w-[272px] gap-2'>
+            <select
+              name='sizeSelect'
+              value={formData.sizeSelect}
+              onChange={handleChange}
+              className='p-2 w-1/2  bg-[#241b2a] text-white border-2 border-white focus:outline-none'
+            >
+              <option value=''>O‘lcham tanlang</option>
+              <option value='S'>S</option>
+              <option value='M'>M</option>
+              <option value='L'>L</option>
+              <option value='XL'>XL</option>
+              <option value='2XL'>2XL</option>
+              <option value='3XL'>3XL</option>
+            </select>
+            <input
+              type='number'
+              name='size'
+              placeholder='Oyoq kiyim razmeri'
+              value={formData.size}
+              onChange={handleChange}
+              className='p-2 w-1/2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
+            />
+          </div>
+
+          <input
+            type='text'
+            name='forGirls'
+            placeholder='Qizlar uchun (ha yoki yo‘q)'
+            value={formData.forGirls}
+            onChange={handleChange}
+            className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
+          />
+          <input
+            type='text'
+            name='forBoys'
+            placeholder='Bollar uchun (ha yoki yo‘q)'
+            value={formData.forBoys}
+            onChange={handleChange}
+            className='p-2 bg-[#241b2a] text-white border-2 border-white focus:outline-none'
+          />
+          <button
+            type='submit'
+            className='p-2 border-2 border-white bg-[#241b2a] hover:bg-white hover:text-[#241b2a] transition-all duration-300'
+            disabled={loading}
+          >
             {loading ? 'Yuborilmoqda...' : 'Yuborish'}
           </button>
         </form>
