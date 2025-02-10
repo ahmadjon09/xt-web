@@ -26,7 +26,7 @@ export const App = () => {
             path: '/',
             element: <RootLayout />,
             children: [
-              { index: true, element: <Error /> },
+              { index: true, element: <Home /> },
               { path: '*', element: <Error /> }
             ]
           }
