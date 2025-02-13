@@ -66,8 +66,7 @@ export const Home = () => {
 *Shoshiling! ✅*
 
 📩 Murojaat uchun 1:  @ProgrammWeeb_
-📩 Murojaat uchun 2:  @fwwaairy
-📩 Murojaat uchun 3:  @yakubovv667
+📩 Murojaat uchun 2:  @fwwaairy_
 👤 Bosh adminlar 1:  @ItsNoWonder_`
 
       const mediaGroup = formData.images.map((_, index) => ({
