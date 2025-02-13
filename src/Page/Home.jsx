@@ -65,7 +65,7 @@ export const Home = () => {
 
 *Shoshiling! ✅*
 
-📩 Murojaat uchun 1:  @ProgrammWeeb_
+📩 Murojaat uchun 1:  @ProgrammWeeb
 📩 Murojaat uchun 2:  @fwwaairy_
 👤 Bosh adminlar 1:  @ItsNoWonder_`
 
